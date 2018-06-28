@@ -73,7 +73,7 @@ deploy-postgres-master-dev:
     - docker:dind
   script:
     - >
-      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG
+      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG}
       COMPOSE_FILE=${COMPOSE_FILE} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
     name: dev/master
@@ -94,7 +94,7 @@ deploy-postgres-slave-dev:
     - docker:dind
   script:
     - >
-      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG
+      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG}
       COMPOSE_FILE=${COMPOSE_FILE} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
     name: dev/slave
