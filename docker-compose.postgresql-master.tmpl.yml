@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  postgresql-master:
+    image: ${DOCKER_ENV_CI_REGISTRY_IMAGE}:${IMAGE_TAG:-latest}
+    environment:
+      - ROLE=master
+      - POSTGRES_PASSWORD
+    networks:
+      postgres-net:
+        aliases:
+          - postgresql_master
+    ports:
+      - 5432
+    volumes:
+      - postgres-master-vol:/var/lib/postgresql/data

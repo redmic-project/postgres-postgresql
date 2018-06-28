@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  postgresql-slave:
+    image: ${DOCKER_ENV_CI_REGISTRY_IMAGE}:${IMAGE_TAG:-latest}
+    environment:
+      - POSTGRES_PASSWORD
+    networks:
+      postgres-net:
+        aliases:
+          - postgresql_slave
+    ports:
+      - 5432
+    volumes:
+      - postgres-slave-vol:/var/lib/postgresql/data
