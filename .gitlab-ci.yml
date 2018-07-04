@@ -60,44 +60,46 @@ container_scanning:
     paths: [gl-sast-container-report.json]
 
 
-deploy-postgres-master-dev:
+deploy-postgresql-master-dev:
   stage: deploy
   image: redmic/docker-gitlab
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
     SERVICE: ${CI_PROJECT_NAME}-master
+    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-master.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-master.dev.yml
+    COMPOSE_FILE: docker-compose.${SERVICE}.tmpl.yml:docker-compose.${SERVICE}.dev.yml
   services:
     - docker:dind
   script:
     - >
-      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG}
-      COMPOSE_FILE=${COMPOSE_FILE} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
-    name: dev/master
+    name: dev/${SERVICE}
   only:
     - dev
   when: manual
 
-deploy-postgres-slave-dev:
+deploy-postgresql-slave-dev:
   stage: deploy
   image: redmic/docker-gitlab
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
     SERVICE: ${CI_PROJECT_NAME}-slave
+    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-slave.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-slave.dev.yml
+    COMPOSE_FILE: docker-compose.${SERVICE}.tmpl.yml:docker-compose.${SERVICE}.dev.yml
   services:
     - docker:dind
   script:
     - >
-      deploy.sh DOCKER_ENV_CI_REGISTRY_IMAGE=${DOCKER_ENV_CI_REGISTRY_IMAGE} IMAGE_TAG=${IMAGE_TAG}
-      COMPOSE_FILE=${COMPOSE_FILE} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
-    name: dev/slave
+    name: dev/${SERVICE}
   only:
     - dev
   when: manual
