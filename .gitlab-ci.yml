@@ -69,7 +69,7 @@ deploy-postgresql-master-dev:
     SERVICE: ${CI_PROJECT_NAME}-master
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${SERVICE}.tmpl.yml:docker-compose.${SERVICE}.dev.yml
+    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-master.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-master.dev.yml
   services:
     - docker:dind
   script:
@@ -91,7 +91,7 @@ deploy-postgresql-slave-dev:
     SERVICE: ${CI_PROJECT_NAME}-slave
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${SERVICE}.tmpl.yml:docker-compose.${SERVICE}.dev.yml
+    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-slave.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-slave.dev.yml
   services:
     - docker:dind
   script:
