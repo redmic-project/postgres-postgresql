@@ -10,6 +10,7 @@ services:
       postgres-net:
         aliases:
           - postgresql_master
+          - db
     volumes:
       - postgres-master-vol:/var/lib/postgresql/data
 
