@@ -5,7 +5,7 @@ stages:
 
 docker-build-dev:
   stage: package
-  image: redmic/docker-gitlab
+  image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
   services:
@@ -21,7 +21,7 @@ docker-build-dev:
 
 docker-build-pro:
   stage: package
-  image: redmic/docker-gitlab
+  image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
   services:
@@ -59,10 +59,9 @@ container_scanning:
   artifacts:
     paths: [gl-sast-container-report.json]
 
-
 deploy-postgresql-dev:
   stage: deploy
-  image: redmic/docker-gitlab
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
@@ -80,12 +79,14 @@ deploy-postgresql-dev:
   environment:
     name: dev
   only:
-    - dev
+    - branches
+  except:
+    - master
   when: manual
 
 deploy-postgresql-pro:
   stage: deploy
-  image: redmic/docker-gitlab
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${PRO_SSH_REMOTE}
