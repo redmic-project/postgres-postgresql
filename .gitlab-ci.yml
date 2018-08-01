@@ -66,7 +66,7 @@ deploy-postgresql-dev:
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-master
+    SERVICE: ${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
@@ -89,7 +89,7 @@ deploy-postgresql-pro:
   variables:
     DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${PRO_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-slave
+    SERVICE: ${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
