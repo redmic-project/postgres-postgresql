@@ -1,16 +1,17 @@
 version: '3.5'
 
 services:
-  postgresql-slave:
+  postgresql:
     image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
     environment:
+      - ROLE=master
       - POSTGRES_PASSWORD
     networks:
       postgres-net:
         aliases:
-          - postgresql_slave
+          - db
     volumes:
-      - postgres-slave-vol:/var/lib/postgresql/data
+      - postgres-vol:/var/lib/postgresql/data
 
 networks:
   postgres-net:

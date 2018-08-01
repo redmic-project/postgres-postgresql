@@ -60,7 +60,7 @@ container_scanning:
     paths: [gl-sast-container-report.json]
 
 
-deploy-postgresql-master-dev:
+deploy-postgresql-dev:
   stage: deploy
   image: redmic/docker-gitlab
   variables:
@@ -69,20 +69,21 @@ deploy-postgresql-master-dev:
     SERVICE: ${CI_PROJECT_NAME}-master
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-master.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-master.dev.yml
+    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
   services:
     - docker:dind
   script:
+    - create-nets.sh postgres-net
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
       POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
-    name: dev/${CI_PROJECT_NAME}-master
+    name: dev
   only:
     - dev
   when: manual
 
-deploy-postgresql-slave-dev:
+deploy-postgresql-pro:
   stage: deploy
   image: redmic/docker-gitlab
   variables:
@@ -91,15 +92,16 @@ deploy-postgresql-slave-dev:
     SERVICE: ${CI_PROJECT_NAME}-slave
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-slave.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-slave.dev.yml
+    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
   services:
     - docker:dind
   script:
+    - create-nets.sh postgres-net
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
       POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
-    name: dev/${CI_PROJECT_NAME}-slave
+    name: prod
   only:
-    - dev
+    - master
   when: manual
