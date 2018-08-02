@@ -69,6 +69,7 @@ deploy-postgresql-dev:
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
+    STATUS_CHECK_DELAY: 60
   services:
     - docker:dind
   script:
@@ -94,6 +95,7 @@ deploy-postgresql-pro:
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
+    STATUS_CHECK_DELAY: 60
   services:
     - docker:dind
   script:
