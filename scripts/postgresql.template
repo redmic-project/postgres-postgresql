@@ -232,12 +232,12 @@ max_wal_size = ${PG_MAX_WAL_SIZE}
 
 # Set these on the master and on any standby that will send replication data.
 
-max_wal_senders = ${PG_MAX_WAL_SENDERS}		# max number of walsender processes
+#max_wal_senders = ${PG_MAX_WAL_SENDERS}		# max number of walsender processes
 				# (change requires restart)
 #wal_keep_segments = 0		# in logfile segments, 16MB each; 0 disables
 #wal_sender_timeout = 60s	# in milliseconds; 0 disables
 
-max_replication_slots = ${PG_MAX_REPLICATION_SLOTS}	# max number of replication slots
+#max_replication_slots = ${PG_MAX_REPLICATION_SLOTS}	# max number of replication slots
 				# (change requires restart)
 #track_commit_timestamp = off	# collect timestamp of transaction commit
 				# (change requires restart)
@@ -278,7 +278,7 @@ max_replication_slots = ${PG_MAX_REPLICATION_SLOTS}	# max number of replication 
 
 # These settings are ignored on a publisher.
 
-max_logical_replication_workers = ${PG_MAX_LOGICAL_REPLICATION_WORKERS}	# taken from max_worker_processes
+#max_logical_replication_workers = ${PG_MAX_LOGICAL_REPLICATION_WORKERS}	# taken from max_worker_processes
 					# (change requires restart)
 #max_sync_workers_per_subscription = 2	# taken from max_logical_replication_workers
 
