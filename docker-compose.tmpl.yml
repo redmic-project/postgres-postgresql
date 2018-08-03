@@ -6,15 +6,15 @@ services:
     environment:
       - ROLE=master
       - POSTGRES_PASSWORD
-      - PGDATA=/var/lib/postgresql/data/db-files/
-      - POSTGRES_INITDB_WALDIR=/var/lib/data/postgresql/wal
+      - PGDATA=/postgresql/data/db-files
+      - POSTGRES_INITDB_WALDIR=/postgresql/wal/wal-files
     networks:
       postgres-net:
         aliases:
           - db
     volumes:
-      - postgres-data-vol:/var/lib/postgresql/data
-      - postgres-wal-vol:/var/lib/data/postgresql/wal
+      - postgres-data-vol:/postgresql/data
+      - postgres-wal-vol:/postgresql/wal
 
 networks:
   postgres-net:
