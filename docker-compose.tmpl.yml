@@ -3,11 +3,6 @@ version: '3.5'
 services:
   postgresql:
     image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
-    environment:
-      - ROLE=master
-      - POSTGRES_PASSWORD
-      - PGDATA=/var/lib/postgresql/data/db-files
-      - POSTGRES_INITDB_WALDIR=/postgresql/wal/wal-files
     networks:
       postgres-net:
         aliases:
@@ -15,6 +10,11 @@ services:
     volumes:
       - postgres-data-vol:/var/lib/postgresql/data
       - postgres-wal-vol:/postgresql/wal
+    environment:
+      - ROLE=master
+      - POSTGRES_PASSWORD
+      - PGDATA=/var/lib/postgresql/data/db-files
+      - POSTGRES_INITDB_WALDIR=/postgresql/wal/wal-files
 
 networks:
   postgres-net:

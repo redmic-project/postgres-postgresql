@@ -10,5 +10,6 @@ services:
 volumes:
   postgres-data-vol:
     name: postgres-data-vol
+
   postgres-wal-vol:
     name: postgres-wal-vol
