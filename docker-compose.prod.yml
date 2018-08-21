@@ -11,8 +11,8 @@ services:
           - node.labels.workerid == ${DESIRED_WORKER_ID}
       restart_policy:
         condition: on-failure
-        delay: 1m
-        window: 3m
+        delay: '1m'
+        window: '180m'
 
 volumes:
   postgres-data-vol:
