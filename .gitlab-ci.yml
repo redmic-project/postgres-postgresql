@@ -120,7 +120,7 @@ deploy-pro:
     - create-nets.sh postgres-net
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      AWS_REGION=${AWS_REGION} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   environment:
     name: prod
   only:
