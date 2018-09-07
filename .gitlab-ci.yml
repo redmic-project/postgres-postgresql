@@ -1,15 +1,18 @@
+image: docker:stable
+
 stages:
   - package
   - test-package
   - deploy
 
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+
 docker-build-commit-non-master-branches:
   stage: package
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - docker:dind
   only:
     - branches
   except:
@@ -21,11 +24,6 @@ docker-build-commit-non-master-branches:
 
 docker-build-commit-master-branch:
   stage: package
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - docker:dind
   only:
     - master
   script:
@@ -35,11 +33,6 @@ docker-build-commit-master-branch:
 
 docker-tag-already-built-image:
   stage: package
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - docker:dind
   only:
     - tags
   script:
@@ -49,12 +42,7 @@ docker-tag-already-built-image:
 
 container-scanning:
   stage: test-package
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
   allow_failure: true
-  services:
-    - docker:stable-dind
   only:
     - branches
   except:
@@ -79,15 +67,14 @@ deploy-dev:
   stage: deploy
   image: registry.gitlab.com/redmic-project/docker/docker-deploy
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}
+    STACK: postgres
+    SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
     STATUS_CHECK_DELAY: 60
-  services:
-    - docker:dind
+    STATUS_CHECK_INTERVAL: 30
   script:
     - create-nets.sh postgres-net
     - >
@@ -105,7 +92,6 @@ deploy-pro:
   stage: deploy
   image: registry.gitlab.com/redmic-project/docker/docker-deploy
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${PRO_SSH_REMOTE}
     STACK: postgres
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
@@ -114,8 +100,6 @@ deploy-pro:
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
     STATUS_CHECK_DELAY: 120
     STATUS_CHECK_INTERVAL: 30
-  services:
-    - docker:dind
   script:
     - create-nets.sh postgres-net
     - >

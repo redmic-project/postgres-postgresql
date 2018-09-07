@@ -13,6 +13,12 @@ services:
         condition: on-failure
         delay: 1m
         window: 3m
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          memory: 1639M
 
 volumes:
   postgres-data-vol:
