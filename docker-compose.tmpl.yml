@@ -11,10 +11,10 @@ services:
       - postgres-data-vol:/var/lib/postgresql/data
       - postgres-wal-vol:/postgresql/wal
     environment:
-      - ROLE=master
+      - ROLE
       - POSTGRES_PASSWORD
-      - PGDATA=/var/lib/postgresql/data/db-files
-      - POSTGRES_INITDB_WALDIR=/postgresql/wal/wal-files
+      - PGDATA
+      - POSTGRES_INITDB_WALDIR
 
 networks:
   postgres-net:
