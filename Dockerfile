@@ -1,5 +1,7 @@
 FROM postgres:10.3
 
+LABEL maintainer="info@redmic.es"
+
 ENV PG_PORT="5432" \
 	PG_MAX_CONNECTIONS="400" \
 	PG_SHARED_PRELOAD_LIBRARIES="pg_cron" \

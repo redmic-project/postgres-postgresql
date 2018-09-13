@@ -73,8 +73,29 @@ deploy-dev:
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
-    STATUS_CHECK_DELAY: 60
-    STATUS_CHECK_INTERVAL: 30
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  script:
+    - create-nets.sh postgres-net
+    - >
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  environment:
+    name: dev
+  only:
+    - dev
+  when: manual
+
+deploy-supporting-branch:
+  stage: deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy
+  variables:
+    SSH_REMOTE: ${DEV_SSH_REMOTE}
+    STACK: postgres
+    SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
+    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
+    IMAGE_TAG: ${CI_COMMIT_SHA}
+    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
     - >
@@ -86,6 +107,7 @@ deploy-dev:
     - branches
   except:
     - master
+    - dev
   when: manual
 
 deploy-pro:
@@ -98,8 +120,8 @@ deploy-pro:
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
     COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
-    STATUS_CHECK_DELAY: 120
-    STATUS_CHECK_INTERVAL: 30
+    AWS_REGION: ${AWS_REGION}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
     - >
