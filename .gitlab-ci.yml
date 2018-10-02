@@ -248,5 +248,4 @@ scheduled-backup-pro:
   environment:
     name: pro
   only:
-    - master
     - schedules
