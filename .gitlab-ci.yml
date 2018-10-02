@@ -4,6 +4,7 @@ stages:
   - package
   - test-package
   - deploy
+  - backup
 
 services:
   - docker:dind
@@ -17,6 +18,7 @@ docker-build-commit-non-master-branches:
     - branches
   except:
     - master
+    - schedules
   script:
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}-latest .
@@ -26,6 +28,8 @@ docker-build-commit-master-branch:
   stage: package
   only:
     - master
+  except:
+    - schedules
   script:
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} -t ${CI_REGISTRY_IMAGE}:latest .
@@ -35,6 +39,8 @@ docker-tag-already-built-image:
   stage: package
   only:
     - tags
+  except:
+    - schedules
   script:
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
@@ -72,7 +78,7 @@ deploy-dev:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
+    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqldev.yml
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
@@ -83,6 +89,8 @@ deploy-dev:
     name: dev
   only:
     - dev
+  except:
+    - schedules
   when: manual
 
 deploy-supporting-branch:
@@ -94,7 +102,7 @@ deploy-supporting-branch:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.dev.yml
+    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqldev.yml
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
@@ -108,6 +116,7 @@ deploy-supporting-branch:
   except:
     - master
     - dev
+    - schedules
   when: manual
 
 deploy-pro:
@@ -119,7 +128,7 @@ deploy-pro:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.tmpl.yml:docker-compose.prod.yml
+    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqlprod.yml
     AWS_REGION: ${AWS_REGION}
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
@@ -131,4 +140,113 @@ deploy-pro:
     name: prod
   only:
     - master
+  except:
+    - schedules
   when: manual
+
+deploy-backup-dev:
+  stage: deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:latest
+  variables:
+    SSH_REMOTE: ${DEV_SSH_REMOTE}
+    STACK: postgres
+    SERVICES_TO_CHECK: postgres_backup-db
+    IMAGE_NAME: registry.gitlab.com/redmic-project/postgres/backup-db
+    IMAGE_TAG: latest
+    COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.dev.yml
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+    BUCKET_BACKUP_DB: ${BUCKET_BACKUP_DB}
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  script:
+    - >
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      POSTGRES_USER=${POSTGRES_USER} POSTGRES_PASSWORD=${POSTGRES_PASSWORD} POSTGRES_HOSTNAME=${POSTGRES_HOSTNAME}
+      BUCKET_BACKUP_DB=${BUCKET_BACKUP_DB} AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  environment:
+    name: dev
+  only:
+    - dev
+  except:
+    - schedules
+  when: manual
+
+deploy-backup-supporting-branch:
+  stage: deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:latest
+  variables:
+    SSH_REMOTE: ${DEV_SSH_REMOTE}
+    STACK: postgres
+    SERVICES_TO_CHECK: postgres_backup-db
+    IMAGE_NAME: registry.gitlab.com/redmic-project/postgres/backup-db
+    IMAGE_TAG: latest
+    COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.dev.yml
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+    BUCKET_BACKUP_DB: ${BUCKET_BACKUP_DB}
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  script:
+    - >
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      POSTGRES_USER=${POSTGRES_USER} POSTGRES_PASSWORD=${POSTGRES_PASSWORD} POSTGRES_HOSTNAME=${POSTGRES_HOSTNAME}
+      BUCKET_BACKUP_DB=${BUCKET_BACKUP_DB} AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  environment:
+    name: dev
+  only:
+    - branches
+  except:
+    - master
+    - dev
+    - schedules
+  when: manual
+
+deploy-backup-pro:
+  stage: deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:latest
+  variables:
+    SSH_REMOTE: ${PRO_SSH_REMOTE}
+    STACK: postgres
+    SERVICES_TO_CHECK: postgres_backup-db
+    IMAGE_NAME: registry.gitlab.com/redmic-project/postgres/backup-db
+    IMAGE_TAG: latest
+    COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.prod.yml
+    AWS_REGION: ${AWS_REGION}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+    BUCKET_BACKUP_DB: ${BUCKET_BACKUP_DB}
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  script:
+    - >
+      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
+      AWS_REGION=${AWS_REGION} POSTGRES_USER=${POSTGRES_USER} POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      POSTGRES_HOSTNAME=${POSTGRES_HOSTNAME} BUCKET_BACKUP_DB=${BUCKET_BACKUP_DB}
+      AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  environment:
+    name: pro
+  only:
+    - master
+  except:
+    - schedules
+  when: manual
+
+scheduled-backup-pro:
+  stage: backup
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:latest
+  variables:
+    SSH_REMOTE: ${PRO_SSH_REMOTE}
+    SERVICE: postgres_backup-db
+  script:
+    - relaunch.sh
+  environment:
+    name: pro
+  only:
+    - master
+    - schedules
