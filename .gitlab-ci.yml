@@ -78,7 +78,7 @@ deploy-dev:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqldev.yml
+    COMPOSE_FILE: docker-compose.postgresql.tmpl.yml:docker-compose.postgresql.dev.yml
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
@@ -102,7 +102,7 @@ deploy-supporting-branch:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqldev.yml
+    COMPOSE_FILE: docker-compose.postgresql.tmpl.yml:docker-compose.postgresql.dev.yml
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
     - create-nets.sh postgres-net
@@ -128,7 +128,7 @@ deploy-pro:
     SERVICES_TO_CHECK: postgres_${CI_PROJECT_NAME}
     IMAGE_NAME: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.postgresqltmpl.yml:docker-compose.postgresqlprod.yml
+    COMPOSE_FILE: docker-compose.postgresql.tmpl.yml:docker-compose.postgresql.prod.yml
     AWS_REGION: ${AWS_REGION}
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   script:
@@ -248,5 +248,4 @@ scheduled-backup-pro:
   environment:
     name: pro
   only:
-    - master
     - schedules
