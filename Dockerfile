@@ -14,7 +14,7 @@ COPY scripts /tmp
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 		locales \
-		postgresql-plpython-${PG_MAJOR} \
+		postgresql-plpython3-${PG_MAJOR} \
 		postgresql-${PG_MAJOR}-cron \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION} \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION}-scripts \
