@@ -1,5 +1,7 @@
 FROM postgres:10.3
 
+LABEL maintainer="info@redmic.es"
+
 ENV PG_PORT="5432" \
 	PG_MAX_CONNECTIONS="400" \
 	PG_SHARED_PRELOAD_LIBRARIES="pg_cron" \
@@ -7,7 +9,6 @@ ENV PG_PORT="5432" \
 	POSTGRES_PASSWORD="password" \
 	PG_POSTGIS_VERSION="2.4" \
 	CONFIG_PATH="/"
-
 
 COPY scripts /tmp
 
@@ -18,7 +19,7 @@ RUN apt-get update \
 		postgresql-${PG_MAJOR}-cron \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION} \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION}-scripts \
-        gettext-base \
+		gettext-base \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& localedef -i es_ES -c -f UTF-8 -A /usr/share/locale/locale.alias es_ES.UTF-8 \
 	&& mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint-origin.sh \
