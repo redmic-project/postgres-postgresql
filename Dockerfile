@@ -16,6 +16,7 @@ RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 		locales \
 		postgresql-plpython3-${PG_MAJOR} \
+		python3-pystache \
 		postgresql-${PG_MAJOR}-cron \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION} \
 		postgresql-${PG_MAJOR}-postgis-${PG_POSTGIS_VERSION}-scripts \
