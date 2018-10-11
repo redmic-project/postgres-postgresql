@@ -7,22 +7,9 @@ services:
         published: 5432
         mode: host
     deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 1m
-        window: 3m
       resources:
         limits:
           cpus: '2'
           memory: 1G
         reservations:
           memory: 820M
-
-volumes:
-  postgres-data-vol:
-    name: postgres-data-vol
-
-  postgres-wal-vol:
-    name: postgres-wal-vol

@@ -15,7 +15,20 @@ services:
     volumes:
       - postgres-data-vol:/var/lib/postgresql/data
       - postgres-wal-vol:/postgresql/wal
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        delay: 1m
+        window: 3m
 
 networks:
   postgres-net:
     external: true
+
+volumes:
+  postgres-data-vol:
+    name: ${POSTGRES_DATA_VOLUME_NAME:-postgres-data-vol}
+
+  postgres-wal-vol:
+    name: ${POSTGRES_WAL_VOLUME_NAME:-postgres-wal-vol}
