@@ -25,10 +25,3 @@ services:
 networks:
   postgres-net:
     external: true
-
-volumes:
-  postgres-data-vol:
-    name: ${POSTGRES_DATA_VOLUME_NAME:-postgres-data-vol}
-
-  postgres-wal-vol:
-    name: ${POSTGRES_WAL_VOLUME_NAME:-postgres-wal-vol}
