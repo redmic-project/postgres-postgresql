@@ -15,6 +15,9 @@ services:
     volumes:
       - postgres-data-vol:/var/lib/postgresql/data
       - postgres-wal-vol:/postgresql/wal
+    configs:
+      - source: mail-layout
+        target: /home/REDMIC/Mail/dist/layout.mustache
     deploy:
       mode: replicated
       replicas: 1
@@ -25,3 +28,8 @@ services:
 networks:
   postgres-net:
     external: true
+
+configs:
+  mail-layout:
+    name: ${MAIL_LAYOUT_NAME:-mail-layout}
+    file: ./config/layout.mustache

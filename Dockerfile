@@ -1,4 +1,4 @@
-FROM postgres:10.3
+FROM postgres:10.6
 
 LABEL maintainer="info@redmic.es"
 
@@ -7,7 +7,7 @@ ENV PG_PORT="5432" \
 	PG_SHARED_PRELOAD_LIBRARIES="pg_cron" \
 	POSTGRES_USER="postgres" \
 	POSTGRES_PASSWORD="password" \
-	PG_POSTGIS_VERSION="2.4" \
+	PG_POSTGIS_VERSION="2.5" \
 	CONFIG_PATH="/"
 
 COPY scripts /tmp
