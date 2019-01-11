@@ -5,6 +5,7 @@ LABEL maintainer="info@redmic.es"
 ENV PG_PORT="5432" \
 	PG_MAX_CONNECTIONS="400" \
 	PG_SHARED_PRELOAD_LIBRARIES="pg_cron" \
+	TCP_KEEPALIVES_IDLE="36000" \
 	POSTGRES_USER="postgres" \
 	POSTGRES_PASSWORD="password" \
 	PG_POSTGIS_VERSION="2.5" \
