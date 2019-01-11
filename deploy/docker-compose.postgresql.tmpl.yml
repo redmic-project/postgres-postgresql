@@ -24,6 +24,7 @@ services:
       restart_policy:
         delay: 1m
         window: 3m
+    command: postgres -c tcp_keepalives_idle=36000 -c tcp_keepalives_interval=3600 -c tcp_keepalives_count=60
 
 networks:
   postgres-net:
