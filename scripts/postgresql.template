@@ -96,7 +96,7 @@ max_connections = ${PG_MAX_CONNECTIONS}			# (change requires restart)
 # - TCP Keepalives -
 # see "man 7 tcp" for details
 
-tcp_keepalives_idle = ${TCP_KEEPALIVES_IDLE}		# TCP_KEEPIDLE, in seconds;
+#tcp_keepalives_idle = 0		# TCP_KEEPIDLE, in seconds;
 					# 0 selects the system default
 #tcp_keepalives_interval = 0		# TCP_KEEPINTVL, in seconds;
 					# 0 selects the system default
