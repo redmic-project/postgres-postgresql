@@ -2,7 +2,7 @@ stages:
   - package
   - test-package
   - deploy
-  - backup
+  - maintenance
 
 services:
   - docker:dind
