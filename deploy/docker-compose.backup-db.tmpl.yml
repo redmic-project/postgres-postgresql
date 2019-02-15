@@ -31,6 +31,9 @@ services:
 
 networks:
   postgres-net:
+    name: ${POSTGRES_NET_NAME:-postgres-net}
     external: true
+
   metric-net:
+    name: ${METRIC_NET_NAME:-metric-net}
     external: true
