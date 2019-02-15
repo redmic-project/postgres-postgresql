@@ -27,6 +27,7 @@ services:
 
 networks:
   postgres-net:
+    name: ${POSTGRES_NET_NAME:-postgres-net}
     external: true
 
 configs:

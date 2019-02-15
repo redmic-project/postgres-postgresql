@@ -7,4 +7,3 @@ services:
         constraints:
           - node.role == worker
           - engine.labels.availability_zone == ${AWS_REGION}${DESIRED_WORKER_ID}
-
