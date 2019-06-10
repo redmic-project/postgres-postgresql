@@ -5,6 +5,7 @@ services:
     image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
     environment:
       ROLE:
+      POSTGRES_USER:
       POSTGRES_PASSWORD:
       PGDATA:
       POSTGRES_INITDB_WALDIR:
