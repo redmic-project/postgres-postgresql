@@ -4,10 +4,10 @@ services:
   postgresql:
     image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
     environment:
-      - ROLE
-      - POSTGRES_PASSWORD
-      - PGDATA
-      - POSTGRES_INITDB_WALDIR
+      ROLE:
+      POSTGRES_PASSWORD:
+      PGDATA:
+      POSTGRES_INITDB_WALDIR:
     networks:
       postgres-net:
         aliases:
@@ -22,12 +22,12 @@ services:
       mode: replicated
       replicas: 1
       restart_policy:
-        delay: 1m
-        window: 3m
+        delay: 10s
+        window: 1m
 
 networks:
   postgres-net:
-    name: ${POSTGRES_NET_NAME:-postgres-net}
+    name: ${POSTGRES_NET_NAME}
     external: true
 
 configs:

@@ -4,34 +4,35 @@ services:
   backup-db:
     image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_HOSTNAME
-      - BUCKET_BACKUP_DB
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - PUSHGATEWAY_HOST
-      - PUSHGATEWAY_JOB
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_HOSTNAME:
+      BUCKET_BACKUP_DB:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      PUSHGATEWAY_HOST:
+      PUSHGATEWAY_JOB:
     networks:
-      - postgres-net
-      - metric-net
+      postgres-net:
+      metric-net:
     deploy:
       mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
-        delay: 1m
-        window: 3m
+        delay: 30s
+        window: 1m
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
+          memory: 256M
         reservations:
-          memory: 410M
+          cpus: '0.001'
+          memory: 64M
 
 networks:
   postgres-net:
-    name: ${POSTGRES_NET_NAME:-postgres-net}
+    name: ${POSTGRES_NET_NAME}
     external: true
 
   metric-net:

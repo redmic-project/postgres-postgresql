@@ -3,20 +3,21 @@ version: '3.5'
 services:
   postgresql:
     ports:
-      - target: 5432
-        published: 5432
+      - target: ${PORT}
+        published: ${PORT}
         mode: host
     deploy:
       resources:
         limits:
           cpus: '1'
-          memory: 1G
+          memory: 512M
         reservations:
-          memory: 820M
+          cpus: '0.001'
+          memory: 128M
 
 volumes:
   postgres-data-vol:
-    name: ${POSTGRES_DATA_VOLUME_NAME:-postgres-data-vol}
+    name: ${POSTGRES_DATA_VOLUME_NAME}
 
   postgres-wal-vol:
-    name: ${POSTGRES_WAL_VOLUME_NAME:-postgres-wal-vol}
+    name: ${POSTGRES_WAL_VOLUME_NAME}
