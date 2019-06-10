@@ -10,23 +10,24 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 2G
+          memory: 1G
         reservations:
-          memory: 1639M
+          cpus: '0.001'
+          memory: 512M
 
 volumes:
   postgres-data-vol:
-    name: ${POSTGRES_DATA_VOLUME_NAME:-postgres-data-vol}
+    name: ${POSTGRES_DATA_VOLUME_NAME}
     driver: 'cloudstor:aws'
     driver_opts:
       backing: relocatable
-      size: 20
+      size: ${POSTGRES_DATA_VOLUME_SIZE:-20}
       ebstype: gp2
 
   postgres-wal-vol:
-    name: ${POSTGRES_WAL_VOLUME_NAME:-postgres-wal-vol}
+    name: ${POSTGRES_WAL_VOLUME_NAME}
     driver: 'cloudstor:aws'
     driver_opts:
       backing: relocatable
-      size: 10
+      size: ${POSTGRES_WAL_VOLUME_SIZE:-10}
       ebstype: gp2
