@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   postgresql:
-    image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/postgres/postgresql}:${IMAGE_TAG:-latest}
     environment:
       ROLE:
       POSTGRES_USER:
@@ -21,15 +21,17 @@ services:
         target: /home/REDMIC/Mail/dist/layout.mustache
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: ${REPLICAS:-1}
       restart_policy:
-        delay: 10s
-        window: 1m
+        delay: ${RESTART_DELAY:-10s}
+      update_config:
+        delay: ${UPDATE_DELAY:-1m}
 
 networks:
   postgres-net:
     name: ${POSTGRES_NET_NAME}
-    external: true
+    driver: ${POSTGRES_NET_DRIVER:-overlay}
+    attachable: ${POSTGRES_NET_ATTACHABLE:-true}
 
 configs:
   mail-layout:

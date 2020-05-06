@@ -2,18 +2,14 @@ version: '3.5'
 
 services:
   postgresql:
-    ports:
-      - target: ${PORT}
-        published: ${PORT}
-        mode: host
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 512M
+          cpus: '${RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-512M}
         reservations:
-          cpus: '0.001'
-          memory: 128M
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-128M}
 
 volumes:
   postgres-data-vol:
