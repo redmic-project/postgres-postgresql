@@ -9,11 +9,11 @@ services:
           - engine.labels.availability_zone == ${AWS_REGION}${DESIRED_WORKER_ID}
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
+          cpus: '${RESOURCES_LIMITS_CPUS:-2}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-1G}
         reservations:
-          cpus: '0.001'
-          memory: 512M
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-512M}
 
 volumes:
   postgres-data-vol:
