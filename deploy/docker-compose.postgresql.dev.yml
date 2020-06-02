@@ -3,13 +3,16 @@ version: '3.5'
 services:
   postgresql:
     deploy:
+      placement:
+        constraints:
+          - node.hostname == ${PLACEMENT_CONSTRAINTS_NODE_HOSTNAME:-hostname}
       resources:
         limits:
-          cpus: '${RESOURCES_LIMITS_CPUS:-1}'
-          memory: ${RESOURCES_LIMITS_MEMORY:-512M}
+          cpus: '${POSTGRESQL_RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${POSTGRESQL_RESOURCES_LIMITS_MEMORY:-512M}
         reservations:
-          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
-          memory: ${RESOURCES_RESERVATIONS_MEMORY:-128M}
+          cpus: '${POSTGRESQL_RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${POSTGRESQL_RESOURCES_RESERVATIONS_MEMORY:-128M}
 
 volumes:
   postgres-data-vol:
