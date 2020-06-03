@@ -40,23 +40,23 @@ variables:
     name: pro/${CI_PROJECT_NAME}
 
 .deploy-backup:
-  extends: .deploy
-  variables:
-    STACK: ${PROJECT_PARENT_NAME}
+  variables: &deploy-backup-variables
     SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_backup-db
     DD_AWS_REGION: ${AWS_REGION}
 
 .deploy-backup-development:
-  extends: .deploy-backup
+  extends: .deploy-development
   variables:
     COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.dev.yml
+    <<: *deploy-backup-variables
   environment:
     name: dev/backup-db
 
 .deploy-backup-production:
-  extends: .deploy-backup
+  extends: .deploy-production
   variables:
     COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.prod.yml
+    <<: *deploy-backup-variables
   environment:
     name: pro/backup-db
 
