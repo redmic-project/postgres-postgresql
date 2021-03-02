@@ -3,9 +3,6 @@ version: '3.5'
 services:
   postgresql:
     deploy:
-      placement:
-        constraints:
-          - node.hostname == ${PLACEMENT_CONSTRAINTS_NODE_HOSTNAME:-hostname}
       resources:
         limits:
           cpus: '${POSTGRESQL_RESOURCES_LIMITS_CPUS:-1}'
@@ -17,6 +14,16 @@ services:
 volumes:
   postgres-data-vol:
     name: ${POSTGRES_DATA_VOLUME_NAME}
+    driver: local
+    driver_opts:
+      type: ${VOL_TYPE:-nfs4}
+      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      device: ${POSTGRES_DATA_VOL_DEVICE:-:/postgres-data-vol/}
 
   postgres-wal-vol:
     name: ${POSTGRES_WAL_VOLUME_NAME}
+    driver: local
+    driver_opts:
+      type: ${VOL_TYPE:-nfs4}
+      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      device: ${POSTGRES_WAL_VOL_DEVICE:-:/postgres-wal-vol/}
