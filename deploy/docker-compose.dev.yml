@@ -5,11 +5,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '${POSTGRESQL_RESOURCES_LIMITS_CPUS:-1}'
-          memory: ${POSTGRESQL_RESOURCES_LIMITS_MEMORY:-512M}
+          cpus: '${RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-512M}
         reservations:
-          cpus: '${POSTGRESQL_RESOURCES_RESERVATIONS_CPUS:-0.001}'
-          memory: ${POSTGRESQL_RESOURCES_RESERVATIONS_MEMORY:-128M}
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-128M}
 
 volumes:
   postgres-data-vol:
