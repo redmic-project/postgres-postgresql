@@ -41,6 +41,6 @@ RUN apt-get update && \
 	localedef -i es_ES -c -f UTF-8 -A /usr/share/locale/locale.alias es_ES.UTF-8 && \
 	mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint-origin.sh && \
 	mv /tmp/docker-entrypoint.sh /usr/local/bin/ && \
-	mv /tmp/pg_hba.conf /usr/share/postgresql/${PG_MAJOR}/pg_hba.conf.sample
+	mv /tmp/pg_hba.conf "/usr/share/postgresql/${PG_MAJOR}/pg_hba.conf.sample"
 
 ENV LANG es_ES.utf8

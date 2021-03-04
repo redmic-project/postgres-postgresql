@@ -12,18 +12,18 @@ services:
           memory: ${RESOURCES_RESERVATIONS_MEMORY:-128M}
 
 volumes:
-  postgres-data-vol:
-    name: ${POSTGRES_DATA_VOLUME_NAME}
+  data-vol:
+    name: ${DATA_VOLUME_NAME}
     driver: local
     driver_opts:
       type: ${VOL_TYPE:-nfs4}
       o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
-      device: ${POSTGRES_DATA_VOL_DEVICE:-:/postgres-data-vol/}
+      device: ${DATA_VOL_DEVICE:-:/postgres-data-vol/}
 
-  postgres-wal-vol:
-    name: ${POSTGRES_WAL_VOLUME_NAME}
+  wal-vol:
+    name: ${WAL_VOLUME_NAME}
     driver: local
     driver_opts:
       type: ${VOL_TYPE:-nfs4}
       o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
-      device: ${POSTGRES_WAL_VOL_DEVICE:-:/postgres-wal-vol/}
+      device: ${WAL_VOL_DEVICE:-:/postgres-wal-vol/}
