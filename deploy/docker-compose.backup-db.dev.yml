@@ -1,8 +1,0 @@
-version: '3.5'
-
-services:
-    backup-db:
-      deploy:
-        placement:
-          constraints:
-            - node.hostname == ${PLACEMENT_CONSTRAINTS_NODE_HOSTNAME:-hostname}

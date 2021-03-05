@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  postgresql:
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - engine.labels.availability_zone == ${AWS_REGION}${DESIRED_WORKER_ID}
+      resources:
+        limits:
+          cpus: '${RESOURCES_LIMITS_CPUS:-2}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-1G}
+        reservations:
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-512M}
+
+volumes:
+  data-vol:
+    name: ${DATA_VOLUME_NAME}
+    driver: 'cloudstor:aws'
+    driver_opts:
+      backing: relocatable
+      size: ${DATA_VOLUME_SIZE:-20}
+      ebstype: gp2
+
+  wal-vol:
+    name: ${WAL_VOLUME_NAME}
+    driver: 'cloudstor:aws'
+    driver_opts:
+      backing: relocatable
+      size: ${WAL_VOLUME_SIZE:-10}
+      ebstype: gp2

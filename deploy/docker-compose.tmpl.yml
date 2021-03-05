@@ -2,7 +2,19 @@ version: '3.5'
 
 services:
   postgresql:
-    image: ${POSTGRESQL_IMAGE_NAME:-registry.gitlab.com/redmic-project/postgres/postgresql}:${POSTGRESQL_IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/postgres/postgresql}:${IMAGE_TAG:-latest}
+    build:
+      context: ..
+      dockerfile: ${DOCKERFILE:-Dockerfile}
+      args:
+        POSTGRES_IMAGE_TAG:
+        LOCALES_VERSION:
+        PLPYTHON3_VERSION:
+        PYTHON3_PYSTACHE_VERSION:
+        PGCRON_VERSION:
+        POSTGIS_MAJOR:
+        POSTGIS_VERSION:
+        GETTEXT_BASE_VERSION:
     environment:
       ROLE:
       POSTGRES_USER:
@@ -14,18 +26,19 @@ services:
         aliases:
           - db
     volumes:
-      - postgres-data-vol:/var/lib/postgresql/data
-      - postgres-wal-vol:/postgresql/wal
+      - data-vol:/var/lib/postgresql/data
+      - wal-vol:/postgresql/wal
     configs:
       - source: mail-layout
         target: /home/REDMIC/Mail/dist/layout.mustache
+    stop_grace_period: ${STOP_GRACE_PERIOD:-1m}
     deploy:
       mode: replicated
-      replicas: ${POSTGRESQL_REPLICAS:-1}
+      replicas: ${REPLICAS:-1}
       restart_policy:
-        delay: ${POSTGRESQL_RESTART_DELAY:-10s}
+        delay: ${RESTART_DELAY:-10s}
       update_config:
-        delay: ${POSTGRESQL_UPDATE_DELAY:-1m}
+        delay: ${UPDATE_DELAY:-2m}
 
 networks:
   postgres-net:

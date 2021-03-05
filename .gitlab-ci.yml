@@ -9,6 +9,9 @@ include:
     ref: master
     file: '/deployment-custom-image.yml'
   - project: 'redmic-project/gitlab-ci-templates'
+    ref: dev
+    file: '/deployment-external-backup-postgresql.yml'
+  - project: 'redmic-project/gitlab-ci-templates'
     ref: master
     file: '/maintenance.yml'
 
@@ -17,6 +20,7 @@ stages:
   - package
   - post-package
   - deploy
+  - deploy-external-service
   - maintenance
 
 variables:
@@ -26,87 +30,19 @@ variables:
 .deploy:
   variables:
     STACK: ${PROJECT_PARENT_NAME}
-    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_${CI_PROJECT_NAME}
 
 .deploy-development:
-  variables:
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}.tmpl.yml:docker-compose.${CI_PROJECT_NAME}.dev.yml
   environment:
     name: dev/${CI_PROJECT_NAME}
 
 .deploy-production:
-  variables:
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}.tmpl.yml:docker-compose.${CI_PROJECT_NAME}.prod.yml
   environment:
     name: pro/${CI_PROJECT_NAME}
 
-.deploy-backup:
-  variables: &deploy-backup-variables
-    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_backup-db
+.deploy-external-service:
+  variables:
+    STACK: ${PROJECT_PARENT_NAME}
     DD_AWS_REGION: ${AWS_REGION}
-
-.deploy-backup-development:
-  extends: .deploy-development
-  variables:
-    COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.dev.yml
-    <<: *deploy-backup-variables
-  environment:
-    name: dev/backup-db
-
-.deploy-backup-production:
-  extends: .deploy-production
-  variables:
-    COMPOSE_FILE: docker-compose.backup-db.tmpl.yml:docker-compose.backup-db.prod.yml
-    <<: *deploy-backup-variables
-  environment:
-    name: pro/backup-db
-
-.deploy-backup-support-branch: &deploy-backup-support-branch
-  rules:
-    - if: $CI_MERGE_REQUEST_ID ||
-          $CI_COMMIT_TAG ||
-          $CI_PIPELINE_SOURCE == "schedule" ||
-          $CI_COMMIT_BRANCH == "master"
-      when: never
-    - if: $CI_COMMIT_BRANCH
-      when: manual
-      allow_failure: true
-
-deploy-backup-support-branch-development:
-  extends: .deploy-backup-development
-  <<: *deploy-backup-support-branch
-
-.deploy-backup-stable-branch: &deploy-backup-stable-branch
-  rules:
-    - if: $CI_MERGE_REQUEST_ID ||
-          $CI_COMMIT_TAG ||
-          $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - if: $CI_COMMIT_BRANCH == "master"
-      when: manual
-      allow_failure: true
-
-deploy-backup-stable-branch-development:
-  extends: .deploy-backup-development
-  <<: *deploy-backup-stable-branch
-
-deploy-backup-stable-branch-production:
-  extends: .deploy-backup-production
-  <<: *deploy-backup-stable-branch
-
-.deploy-backup-tag: &deploy-backup-tag
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: manual
-      allow_failure: true
-
-deploy-backup-tag-development:
-  extends: .deploy-backup-development
-  <<: *deploy-backup-tag
-
-deploy-backup-tag-production:
-  extends: .deploy-backup-production
-  <<: *deploy-backup-tag
 
 .scheduled-run:
   variables:
