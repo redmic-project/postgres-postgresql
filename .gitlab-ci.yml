@@ -8,9 +8,9 @@ include:
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
     file: '/deployment-custom-image.yml'
-  - project: 'redmic-project/postgres/backup-db'
+  - project: 'redmic-project/gitlab-ci-templates'
     ref: dev
-    file: '/backup-db-deployment.yml'
+    file: '/deployment-external-backup-postgresql.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
     file: '/maintenance.yml'
@@ -20,7 +20,7 @@ stages:
   - package
   - post-package
   - deploy
-  - deploy-backup-db
+  - deploy-external-service
   - maintenance
 
 variables:
@@ -39,7 +39,7 @@ variables:
   environment:
     name: pro/${CI_PROJECT_NAME}
 
-.deploy-backup-db:
+.deploy-external-service:
   variables:
     STACK: ${PROJECT_PARENT_NAME}
     DD_AWS_REGION: ${AWS_REGION}
