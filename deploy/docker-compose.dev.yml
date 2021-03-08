@@ -16,14 +16,14 @@ volumes:
     name: ${DATA_VOLUME_NAME}
     driver: local
     driver_opts:
-      type: ${VOL_TYPE:-nfs4}
-      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      type: ${VOL_TYPE}
+      o: addr=${VOL_ADDR},${VOL_OPTIONS}
       device: ${DATA_VOL_DEVICE:-:/postgres-data-vol/}
 
   wal-vol:
     name: ${WAL_VOLUME_NAME}
     driver: local
     driver_opts:
-      type: ${VOL_TYPE:-nfs4}
-      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      type: ${VOL_TYPE}
+      o: addr=${VOL_ADDR},${VOL_OPTIONS}
       device: ${WAL_VOL_DEVICE:-:/postgres-wal-vol/}
