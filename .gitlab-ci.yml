@@ -9,7 +9,7 @@ include:
     ref: master
     file: '/deployment-custom-image.yml'
   - project: 'redmic-project/gitlab-ci-templates'
-    ref: dev
+    ref: master
     file: '/deployment-external-backup-postgresql.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
@@ -47,4 +47,4 @@ variables:
 .scheduled-run:
   variables:
     STACK: ${PROJECT_PARENT_NAME}
-    SERVICE: ${PROJECT_PARENT_NAME}_backup-db
+    SERVICE: ${PROJECT_PARENT_NAME}_backup-postgresql
