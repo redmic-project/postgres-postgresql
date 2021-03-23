@@ -10,7 +10,7 @@ include:
     file: '/deployment-custom-image.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/deployment-external-backup-postgresql.yml'
+    file: '/deployment-external-service/backup-postgresql.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
     file: '/maintenance.yml'
