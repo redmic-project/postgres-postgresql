@@ -1,0 +1,27 @@
+services:
+  postgresql:
+    deploy:
+      resources:
+        limits:
+          cpus: '${RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-512M}
+        reservations:
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-256M}
+
+volumes:
+  data-vol:
+    name: ${DATA_VOL_NAME}
+    driver: ${VOL_DRIVER}
+    driver_opts:
+      type: ${VOL_TYPE}
+      o: addr=${VOL_ADDR},vers=${VOL_VERS},${VOL_OPTS}
+      device: :${VOL_DEVICE_PREFIX}${DATA_VOL_DEVICE:-/postgres-data-vol/}
+
+  wal-vol:
+    name: ${WAL_VOL_NAME}
+    driver: ${VOL_DRIVER}
+    driver_opts:
+      type: ${VOL_TYPE}
+      o: addr=${VOL_ADDR},vers=${VOL_VERS},${VOL_OPTS}
+      device: :${VOL_DEVICE_PREFIX}${WAL_VOL_DEVICE:-/postgres-wal-vol/}

@@ -1,24 +1,15 @@
-version: '3.5'
-
 services:
   postgresql:
     image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/postgres/postgresql}:${IMAGE_TAG:-latest}
-    build:
-      context: ..
-      dockerfile: ${DOCKERFILE:-Dockerfile}
-      args:
-        POSTGRES_IMAGE_TAG:
-        LOCALES_VERSION:
-        PLPYTHON3_VERSION:
-        PYTHON3_PYSTACHE_VERSION:
-        PGCRON_VERSION:
-        POSTGIS_MAJOR:
-        POSTGIS_VERSION:
-        GETTEXT_BASE_VERSION:
+    command: >
+      -c shared_preload_libraries=${SHARED_PRELOAD_LIBRARIES:-pg_cron}
+      -c cron.database_name=${POSTGRES_DB}
+      -c work_mem=${WORK_MEM:-128MB}
+      -c max_wal_size=${MAX_WAL_SIZE:-1GB}
     environment:
-      ROLE:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
+      POSTGRES_DB:
       PGDATA:
       POSTGRES_INITDB_WALDIR:
     networks:
@@ -26,8 +17,10 @@ services:
         aliases:
           - db
     volumes:
-      - data-vol:/var/lib/postgresql/data
-      - wal-vol:/postgresql/wal
+      - data-vol:${PGDATA}
+      - wal-vol:${POSTGRES_INITDB_WALDIR}
+    healthcheck:
+      disable: ${HEALTHCHECK_DISABLE:-false}
     configs:
       - source: mail-layout
         target: /home/REDMIC/Mail/dist/layout.mustache
@@ -36,13 +29,13 @@ services:
       mode: replicated
       replicas: ${REPLICAS:-1}
       restart_policy:
-        delay: ${RESTART_DELAY:-10s}
+        delay: ${RESTART_DELAY:-5s}
       update_config:
-        delay: ${UPDATE_DELAY:-2m}
+        delay: ${UPDATE_DELAY:-1m}
 
 networks:
   postgres-net:
-    name: ${POSTGRES_NET_NAME}
+    name: ${POSTGRES_NET_NAME:-postgres-net}
     driver: ${POSTGRES_NET_DRIVER:-overlay}
     attachable: ${POSTGRES_NET_ATTACHABLE:-true}
 
