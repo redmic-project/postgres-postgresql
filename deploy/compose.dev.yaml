@@ -16,7 +16,7 @@ volumes:
     driver_opts:
       type: ${VOL_TYPE}
       o: addr=${VOL_ADDR},vers=${VOL_VERS},${VOL_OPTS}
-      device: :${VOL_DEVICE_PREFIX}${DATA_VOL_DEVICE:-/postgres-data-vol/}
+      device: :${VOL_DEVICE_PREFIX}${DATA_VOL_DEVICE}
 
   wal-vol:
     name: ${WAL_VOL_NAME}
@@ -24,4 +24,4 @@ volumes:
     driver_opts:
       type: ${VOL_TYPE}
       o: addr=${VOL_ADDR},vers=${VOL_VERS},${VOL_OPTS}
-      device: :${VOL_DEVICE_PREFIX}${WAL_VOL_DEVICE:-/postgres-wal-vol/}
+      device: :${VOL_DEVICE_PREFIX}${WAL_VOL_DEVICE}
