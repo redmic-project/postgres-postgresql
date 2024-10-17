@@ -24,7 +24,7 @@ services:
     configs:
       - source: mail-layout
         target: /home/REDMIC/Mail/dist/layout.mustache
-    stop_grace_period: ${STOP_GRACE_PERIOD:-1m}
+    stop_grace_period: ${STOP_GRACE_PERIOD:-2m}
     deploy:
       mode: replicated
       replicas: ${REPLICAS:-1}

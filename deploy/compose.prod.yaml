@@ -16,7 +16,7 @@ services:
 volumes:
   data-vol:
     name: ${DATA_VOL_NAME}
-    driver: ${PROD_VOL_DRIVER}
+    driver: ${PRO_VOL_DRIVER}
     driver_opts:
       backing: ${DATA_VOL_BACKING:-relocatable}
       size: ${DATA_VOL_SIZE:-20}
@@ -24,8 +24,8 @@ volumes:
 
   wal-vol:
     name: ${WAL_VOLUME_NAME}
-    driver: ${PROD_VOL_DRIVER}
+    driver: ${PRO_VOL_DRIVER}
     driver_opts:
       backing: ${WAL_VOL_BACKING:-relocatable}
-      size: ${WAL_VOL_SIZE:-10}
+      size: ${WAL_VOL_SIZE:-2}
       ebstype: ${WAL_VOL_EBSTYPE:-gp2}
