@@ -6,6 +6,7 @@ services:
       -c cron.database_name=${POSTGRES_DB}
       -c work_mem=${WORK_MEM:-128MB}
       -c max_wal_size=${MAX_WAL_SIZE:-1GB}
+      -c max_connections=${MAX_CONNECTIONS:-200}
     environment:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
