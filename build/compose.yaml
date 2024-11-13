@@ -1,0 +1,15 @@
+services:
+  postgresql:
+    image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/postgres/postgresql}:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile}
+      args:
+        POSTGRES_IMAGE_TAG:
+        LOCALES_VERSION:
+        PLPYTHON3_VERSION:
+        PYTHON3_PYSTACHE_VERSION:
+        PGCRON_VERSION:
+        POSTGIS_MAJOR:
+        POSTGIS_VERSION:
+        GETTEXT_BASE_VERSION:

@@ -1,19 +1,19 @@
 include:
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/packaging.yml'
+    file: '/packaging-docker/docker-build.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/deployment.yml'
+    file: '/deployment-service/docker-deploy.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/deployment-custom-image.yml'
+    file: '/deployment-service/custom-image.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
     file: '/deployment-external-service/backup-postgresql.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/maintenance.yml'
+    file: '/deployment-service/maintenance.yml'
 
 stages:
   - pre-package
@@ -25,24 +25,20 @@ stages:
 
 variables:
   PROJECT_PARENT_NAME: postgres
-  DEVELOPMENT_MAINTENANCE_DISABLED: 'true'
 
 .deploy:
   variables:
     STACK: ${PROJECT_PARENT_NAME}
 
-.deploy-development:
-  environment:
-    name: dev/${CI_PROJECT_NAME}
-
-.deploy-production:
-  environment:
-    name: pro/${CI_PROJECT_NAME}
-
 .deploy-external-service:
   variables:
     STACK: ${PROJECT_PARENT_NAME}
-    DD_AWS_REGION: ${AWS_REGION}
+
+.deploy-external-backup-postgresql:
+  variables:
+    DD_POSTGRES_NET_NAME: ${DD_DATABASE_NET}
+    DD_POSTGRES_HOSTNAME: ${DD_DATABASE_HOST}
+    DD_POSTGRES_USER: postgres
 
 .scheduled-run:
   variables:
