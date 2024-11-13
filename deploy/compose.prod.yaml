@@ -1,5 +1,7 @@
 services:
   postgresql:
+    environment:
+      PGDATA: ${PGDATA}${PGDATA_SUBPATH:-/db}
     deploy:
       placement:
         constraints:
@@ -23,7 +25,7 @@ volumes:
       ebstype: ${DATA_VOL_EBSTYPE:-gp2}
 
   wal-vol:
-    name: ${WAL_VOLUME_NAME}
+    name: ${WAL_VOL_NAME}
     driver: ${PRO_VOL_DRIVER}
     driver_opts:
       backing: ${WAL_VOL_BACKING:-relocatable}
