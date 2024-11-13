@@ -1,5 +1,7 @@
 services:
   postgresql:
+    environment:
+      PGDATA: ${PGDATA}${PGDATA_SUBPATH:-/db}
     deploy:
       placement:
         constraints:
