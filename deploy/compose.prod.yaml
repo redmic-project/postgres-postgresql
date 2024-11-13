@@ -2,6 +2,7 @@ services:
   postgresql:
     environment:
       PGDATA: ${PGDATA}${PGDATA_SUBPATH:-/db}
+      POSTGRES_INITDB_WALDIR: ${POSTGRES_INITDB_WALDIR}${POSTGRES_INITDB_WALDIR_SUBPATH:-/wal}
     deploy:
       placement:
         constraints:
